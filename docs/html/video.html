@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<!-- By 朽木 2020.3.2 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曙光小学 空中课堂直播</title>
+    <link rel="shortcut icon" href="https://www.aliyun.com/favicon.ico" type="image/x-icon" >
+    <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+    <style>
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, object, fieldset, input, textarea, p, blockquote, th, td{
+            padding:0;
+            margin: 0;
+        }
+        body{
+            background-color: black;
+        }
+        .vjs-default-skin{
+            min-width: 50%;
+            max-width: 100%;
+            margin:0 auto;
+        }
+        .button{
+            position:absolute;
+            left: 0;
+            top: 20px;
+            z-index: 2;
+            background-color:#3B90FA;
+            color: #eee;
+            text-decoration: none;
+            display: block;
+            padding:5px 10px;
+            opacity: .8;
+        }
+        .list{
+            position:absolute;
+            left: 0;
+            top: 20px;
+            z-index: 2;
+            background-color: #222B3F;
+            display: none;
+        }
+        .list a{
+            display: block;
+            color: #A3A9B3;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+        .list a:hover{
+            background-color:#3B90FA;
+            color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <a href="" class="button">切换</a>
+    <div class="list">
+        <ul>
+            <!-- https://github.com/shlyren/m3u8/blob/master/%E7%9B%B4%E6%92%AD%E6%BA%90/%E5%9B%BD%E5%86%85%E9%A2%91%E9%81%93%E6%95%B4%E7%90%86.md -->
+            <li><a href="http://live.hd.hdbs.cn/video/s10001-hdxwpd/index.m3u8">邯郸新闻综合频道</a></li>
+            <li><a href="http://live.hd.hdbs.cn/video/s10001-hdggpd/index.m3u8">邯郸公共频道</a></li>
+            <li><a href="http://live.hd.hdbs.cn/video/s10001-hdkjpd/index.m3u8">邯郸科教频道</a></li>
+            <li><a href="http://weblive.hebtv.com/live/nmpd_lc/index.m3u8">河北电视台农民频道</a></li>
+            <li><a href="http://weblive.hebtv.com/live/hbjj_lc/index.m3u8">河北经济频道</a></li>
+            <li><a href="http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8">CCTV-1</a></li>
+        </ul>
+    </div>
+    <video-js id="video" class="vjs-default-skin" controls>
+        <source src="" type="application/x-mpegURL">
+    </video-js>
+    <script src="https://unpkg.com/video.js/dist/video.js"></script>
+    <script src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js"></script>
+    <script>
+    (function(window, videojs) {
+        var title = document.title;
+
+        // 默认播放第一条
+        document.title = document.querySelector('.list a').innerText + ' - ' + title;
+        document.querySelector('#video source').setAttribute('src', document.querySelector('.list a').getAttribute('href'));
+        // 初始化播放器
+        var player = window.player = videojs('video',{
+            'enableLowInitialPlaylist': true
+        });
+        player.play();
+        // 点击切换源
+        document.querySelectorAll('.list a').forEach( function(element, index, array) {
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.title = e.target.innerText + ' - ' + title;
+                player.src({
+                    src: e.target.getAttribute('href')
+                });
+                player.play();
+            }, false);
+        });
+        // 菜单
+        document.querySelector('.list').addEventListener('mouseleave', function(e){
+            document.querySelector('.list').style.display = 'none';
+            document.querySelector('.button').style.display = 'block';
+        }, false);
+        var showMenu = function (e) {
+            e.preventDefault();
+            document.querySelector('.button').style.display = 'none';
+            document.querySelector('.list').style.display = 'block';
+        };
+        document.querySelector('.button').addEventListener('click', showMenu, false);
+        document.querySelector('.button').addEventListener('mouseover', showMenu, false);
+
+    }(window, window.videojs));
+
+    </script>
+</body>
+</html>
